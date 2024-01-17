@@ -1,9 +1,20 @@
-.left-half{
-  height: 98vh;
-  border: 1px solid red;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+// .left-half{
+//   height: 98vh;
+//   border: 1px solid red;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+// }
+
+.button {
+  background-color: #04AA6D; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
 }
 
 .drag-list {
@@ -22,6 +33,10 @@
   display: grid;
   place-items: center;
   background-color: rgb(168, 118, 65);
+}
+
+#empty {
+  background-color: white;
 }
 
 .center-block {
