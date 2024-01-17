@@ -1,6 +1,36 @@
+.left-half{
+  height: 98vh;
+  border: 1px solid red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drag-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  width: 120px;
+  height: 120px;
+}
+
 .drag-item {
-  width: 30px;
-  height: 30px;
-  border: 1px solid ;
+  width: 120px;
+  height: 120px;
+  border: 3px solid;
   box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  background-color: rgb(168, 118, 65);
+}
+
+.center-block {
+  margin: auto;
+  display: block;
+}
+
+.tile-number {
+  color: white;
+  font-size: 30px;
+  font-weight: bold;
 }
