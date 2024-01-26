@@ -5,7 +5,8 @@ import './styles.scss';
 
 function App() {
   const [tiles, setTiles] = useState([]);
-  const [shuffledTiles, setShuffledTiles] =useState([]);
+  const [shuffledTiles, setShuffledTiles] = useState([]);
+  const [isTilesShuffled, setIsTilesShuffled] = useState(false);
   const orderTiles = useCallback((async) => {
     const order = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
     let tilesInProgress = [...tiles];
@@ -21,13 +22,15 @@ function App() {
         <div className="drag-item" draggable="true" id="empty" key="empty"></div>
       )
       setTiles(tilesInProgress);
+    } else {
+      setIsTilesShuffled(false);
     }
   }, [tiles]);
 
   
   const shuffleTiles = useCallback(() => {
     let currentIndex = tiles.length,  randomIndex;
-
+    let tilesInProgress = [...tiles];
     // While there remain elements to shuffle.
     while (currentIndex > 0) {
 
@@ -36,10 +39,11 @@ function App() {
       currentIndex--;
 
       // And swap it with the current element.
-      [tiles[currentIndex], tiles[randomIndex]] = [
-        tiles[randomIndex], tiles[currentIndex]];
+      [tilesInProgress[currentIndex], tilesInProgress[randomIndex]] = [
+        tilesInProgress[randomIndex], tilesInProgress[currentIndex]];
     }
-    setShuffledTiles(tiles);
+    setShuffledTiles(tilesInProgress);
+    setIsTilesShuffled(true);
   }, [tiles]);
 
   return (
@@ -56,9 +60,9 @@ function App() {
             shuffle
           </p>
         </button>
-        {tiles.length === 0 ? null : 
-          (<div className='drag-list'>
-              {tiles}
+        {tiles.length === 0 && !isTilesShuffled ? null :
+        (<div className='drag-list'>
+              {isTilesShuffled ? shuffledTiles : tiles}
             </div>
           )
         }
