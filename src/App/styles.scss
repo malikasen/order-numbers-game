@@ -1,0 +1,44 @@
+.shuffle-button {
+  background-color: #04AA6D; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 5px;
+}
+
+.drag-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  width: 120px;
+  height: 120px;
+}
+
+.drag-item {
+  width: 120px;
+  height: 120px;
+  border: 3px solid;
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  background-color: rgb(168, 118, 65);
+}
+
+#empty {
+  background-color: white;
+}
+
+.center-block {
+  margin: auto;
+  display: block;
+}
+
+.tile-number {
+  color: white;
+  font-size: 30px;
+  font-weight: bold;
+}
