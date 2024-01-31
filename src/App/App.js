@@ -20,12 +20,7 @@ function App() {
           );
         }
         tilesInProgress.push(
-          <div
-            className="drag-item"
-            draggable="true"
-            id="empty"
-            key="empty"
-          ></div>,
+          <div className="drag-item" draggable="true" id="empty" key="empty" />,
         );
         setTiles(tilesInProgress);
       } else {
