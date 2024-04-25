@@ -18,7 +18,7 @@
   height: 120px;
 }
 
-.drag-item {
+.draggable {
   width: 120px;
   height: 120px;
   border: 3px solid;
@@ -26,6 +26,7 @@
   display: grid;
   place-items: center;
   background-color: rgb(168, 118, 65);
+  cursor: move;
 }
 
 #empty {

@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 import './styles.scss';
+import Numbers from './components/Numbers';
 
 function App() {
   const [tiles, setTiles] = useState([]);
@@ -14,13 +15,13 @@ function App() {
       if (tiles.length === 0) {
         for (let i = 0; i < order.length; i++) {
           tilesInProgress.push(
-            <div className="drag-item" draggable="true" key={i}>
-              <p className="tile-number">{order[i]}</p>
+            <div className="draggable" draggable="true" key={i}>
+              <Numbers number={order[i]}/>
             </div>,
           );
         }
         tilesInProgress.push(
-          <div className="drag-item" draggable="true" id="empty" key="empty" />,
+          <div className="draggable" draggable="true" id="empty" key="empty" />,
         );
         setTiles(tilesInProgress);
       } else {
@@ -51,7 +52,9 @@ function App() {
     setIsTilesShuffled(true);
   }, [tiles]);
 
-  const switchTiles = useCallback(() => {}, []);
+  useEffect(() => {
+    
+  }, []);
 
   const canMoveTile = (tileCoordinate, emptyTileCoordinate) => {
     // Corner Cases
