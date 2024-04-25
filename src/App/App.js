@@ -3,6 +3,7 @@ import { useState, useCallback, useEffect } from 'react';
 
 import './styles.scss';
 import Numbers from './components/Numbers';
+import EmptySquare from './components/EmptySquare';
 
 function App() {
   const [tiles, setTiles] = useState([]);
@@ -16,13 +17,11 @@ function App() {
         for (let i = 0; i < order.length; i++) {
           tilesInProgress.push(
             <div className="draggable" draggable="true" key={i}>
-              <Numbers number={order[i]}/>
+              <Numbers number={order[i]} />
             </div>,
           );
         }
-        tilesInProgress.push(
-          <div className="draggable" draggable="true" id="empty" key="empty" />,
-        );
+        tilesInProgress.push(<EmptySquare />);
         setTiles(tilesInProgress);
       } else {
         setIsTilesShuffled(false);
@@ -52,9 +51,7 @@ function App() {
     setIsTilesShuffled(true);
   }, [tiles]);
 
-  useEffect(() => {
-    
-  }, []);
+  useEffect(() => {}, []);
 
   const canMoveTile = (tileCoordinate, emptyTileCoordinate) => {
     // Corner Cases
@@ -73,7 +70,7 @@ function App() {
       { 0: [1, 4] },
       { 3: [2, 7] },
       { 12: [13, 8] },
-      { 15: [14, 11]},
+      { 15: [14, 11] },
       { 1: [0, 2, 5] },
       { 2: [1, 3, 6] },
       { 4: [5, 0, 8] },

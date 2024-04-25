@@ -29,6 +29,15 @@
   cursor: move;
 }
 
+.droppable {
+  width: 120px;
+  height: 120px;
+  border: 3px solid;
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+}
+
 #empty {
   background-color: white;
 }
