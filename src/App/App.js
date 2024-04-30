@@ -1,40 +1,58 @@
 import * as React from 'react';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 import './styles.scss';
 import Numbers from './components/Numbers';
 import EmptySquare from './components/EmptySquare';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+
+const recordOrders = (shuffledTiles, setTilePositions) => {
+  if (shuffledTiles.length < 1) {
+    console.log('return');
+    return null;
+  }
+  let tilePositions = [];
+  for (let i = 0; i < 16; i++) {
+    let tilePosition = {
+      id: null,
+      order: null,
+    };
+    if (shuffledTiles[i].props === undefined) {
+      tilePosition.id = 'empty';
+    } else {
+      tilePosition.id = shuffledTiles[i].props.number;
+    }
+    tilePosition.order = i;
+    tilePositions.push(tilePosition);
+  }
+  setTilePositions(tilePositions);
+  console.log(tilePositions);
+};
 
 function App() {
   const [tiles, setTiles] = useState([]);
   const [shuffledTiles, setShuffledTiles] = useState([]);
   const [isTilesShuffled, setIsTilesShuffled] = useState(false);
-  const orderTiles = useCallback(
-    (async) => {
-      const order = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-      let tilesInProgress = [...tiles];
-      if (tiles.length === 0) {
-        for (let i = 0; i < order.length; i++) {
-          tilesInProgress.push(
-            <div className="draggable" draggable="true" key={i}>
-              <Numbers number={order[i]} />
-            </div>,
-          );
-        }
-        tilesInProgress.push(<EmptySquare />);
-        setTiles(tilesInProgress);
-      } else {
-        setIsTilesShuffled(false);
+  const [tilePositions, setTilePositions] = useState([]);
+  const orderTiles = () => {
+    let tilesInProgress = [...tiles];
+    if (tiles.length === 0) {
+      for (let i = 0; i < 15; i++) {
+        tilesInProgress.push(<Numbers number={i + 1} />);
       }
-    },
-    [tiles],
-  );
+      tilesInProgress.push(<EmptySquare />);
+      setTiles(tilesInProgress);
+    } else {
+      setIsTilesShuffled(false);
+    }
+  };
 
-  const shuffleTiles = useCallback(() => {
+  const shuffleTiles = () => {
     let currentIndex = tiles.length,
       randomIndex;
     let tilesInProgress = [...tiles];
-    // While there remain elements to shuffle.
+    // While there are remaining elements to shuffle.
     while (currentIndex > 0) {
       // Pick a remaining element.
       randomIndex = Math.floor(Math.random() * currentIndex);
@@ -46,12 +64,9 @@ function App() {
         tilesInProgress[currentIndex],
       ];
     }
-    console.log('shuffled tiles', tilesInProgress);
     setShuffledTiles(tilesInProgress);
     setIsTilesShuffled(true);
-  }, [tiles]);
-
-  useEffect(() => {}, []);
+  };
 
   const canMoveTile = (tileCoordinate, emptyTileCoordinate) => {
     // Corner Cases
@@ -91,24 +106,26 @@ function App() {
     return false;
   };
 
+  useEffect(() => {
+    if (isTilesShuffled) {
+      recordOrders(shuffledTiles, setTilePositions);
+    }
+  }, [isTilesShuffled, shuffledTiles, setTilePositions]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <div className="left-half">
-          <button className="shuffle-button" onClick={orderTiles}>
-            <p>order numbers</p>
-          </button>
-          <button className="shuffle-button" onClick={shuffleTiles}>
-            <p>shuffle</p>
-          </button>
-          {tiles.length === 0 && !isTilesShuffled ? null : (
-            <div className="drag-list">
-              {isTilesShuffled ? shuffledTiles : tiles}
-            </div>
-          )}
+    <DndProvider backend={HTML5Backend}>
+      <button className="shuffle-button" onClick={orderTiles}>
+        <p>order numbers</p>
+      </button>
+      <button className="shuffle-button" onClick={shuffleTiles}>
+        <p>shuffle</p>
+      </button>
+      {tiles.length === 0 && !isTilesShuffled ? null : (
+        <div className="drag-list">
+          {isTilesShuffled ? shuffledTiles : tiles}
         </div>
-      </header>
-    </div>
+      )}
+    </DndProvider>
   );
 }
 
