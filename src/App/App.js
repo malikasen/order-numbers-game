@@ -6,29 +6,7 @@ import Numbers from './components/Numbers';
 import EmptySquare from './components/EmptySquare';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-
-const recordOrders = (shuffledTiles, setTilePositions) => {
-  if (shuffledTiles.length < 1) {
-    console.log('return');
-    return null;
-  }
-  let tilePositions = [];
-  for (let i = 0; i < 16; i++) {
-    let tilePosition = {
-      id: null,
-      order: null,
-    };
-    if (shuffledTiles[i].props === undefined) {
-      tilePosition.id = 'empty';
-    } else {
-      tilePosition.id = shuffledTiles[i].props.number;
-    }
-    tilePosition.order = i;
-    tilePositions.push(tilePosition);
-  }
-  setTilePositions(tilePositions);
-  console.log(tilePositions);
-};
+import recordOrders from './utils';
 
 function App() {
   const [tiles, setTiles] = useState([]);
