@@ -2,9 +2,13 @@ import * as React from 'react';
 import { ItemTypes } from './ItemTypes';
 import { useDrag } from 'react-dnd';
 
-export default function Numbers({ number }) {
+export default function Numbers({ number, tilePositions }) {
+  const position = tilePositions.find(
+    (tilePosition) => tilePosition.id === number,
+  )?.order;
   const [{ isDragging }, drag] = useDrag(() => ({
     type: ItemTypes.NUMBER,
+    item: { number, position },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
