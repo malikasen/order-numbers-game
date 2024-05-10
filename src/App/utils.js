@@ -2,21 +2,6 @@ import * as React from 'react';
 import EmptySquare from './components/EmptySquare';
 import Numbers from './components/Numbers';
 
-const recordPositions = (shuffledTiles, setTilePositions) => {
-  if (shuffledTiles.length < 1) {
-    return null;
-  }
-  let tilePositions = [];
-  for (let i = 0; i < 16; i++) {
-    if (shuffledTiles[i].props === undefined) {
-      tilePositions.push({ id: 'empty', order: i });
-    } else {
-      tilePositions.push({ id: shuffledTiles[i].props.number, order: i });
-    }
-  }
-  setTilePositions(tilePositions);
-};
-
 const canMoveTile = (tilePosition, emptyTilePosition) => {
   // Corner Cases
   // 0'th element can move right or down
@@ -49,7 +34,6 @@ const canMoveTile = (tilePosition, emptyTilePosition) => {
     { 15: [14, 11] },
   ];
   let allowedPositions = allowedMoveCoordinates[tilePosition];
-  console.log("number pos", tilePosition, "empty pos", emptyTilePosition, "allowed", allowedPositions);
   if (
     allowedPositions[Object.keys(allowedPositions)[0]].includes(
       emptyTilePosition,
