@@ -15,9 +15,7 @@ function App() {
     let tilesInProgress = [...tiles];
     if (tiles.length === 0) {
       for (let i = 0; i < 15; i++) {
-        tilesInProgress.push(
-          <Numbers number={i + 1} tilePosition={i} />,
-        );
+        tilesInProgress.push(<Numbers number={i + 1} tilePosition={i} />);
       }
       tilesInProgress.push(
         <EmptySquare
@@ -56,7 +54,7 @@ function App() {
         newRandom,
       ];
     }
-    console.log("tiles in progress", tilesInProgress)
+    console.log('tiles in progress', tilesInProgress);
     setShuffledTiles(tilesInProgress);
     setIsTilesShuffled(true);
   };
