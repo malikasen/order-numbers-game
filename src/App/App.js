@@ -6,7 +6,7 @@ import Numbers from './components/Numbers';
 import EmptySquare from './components/EmptySquare';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { recordOrders, switchPositions } from './utils';
+import { recordPositions } from './utils';
 
 function App() {
   const [tiles, setTiles] = useState([]);
@@ -20,12 +20,12 @@ function App() {
       for (let i = 0; i < 15; i++) {
         tilePositionsInProgress.push({ id: i + 1, order: i });
         tilesInProgress.push(
-          <Numbers number={i + 1} tilePositions={tilePositionsInProgress} />,
+          <Numbers number={i + 1} tilePosition={i} />,
         );
       }
       tilesInProgress.push(
         <EmptySquare
-          tilePositions={tilePositionsInProgress}
+          tilePosition={15}
           setIsTilesShuffled={setIsTilesShuffled}
           setShuffledTiles={setShuffledTiles}
         />,
@@ -54,13 +54,15 @@ function App() {
         tilesInProgress[currentIndex],
       ];
     }
+    console.log("tiles in progress", tilesInProgress)
     setShuffledTiles(tilesInProgress);
     setIsTilesShuffled(true);
   };
 
   useEffect(() => {
     if (isTilesShuffled) {
-      recordOrders(shuffledTiles, setTilePositions);
+      recordPositions(shuffledTiles, setTilePositions);
+      console.log("positions recorded");
     }
   }, [isTilesShuffled, shuffledTiles, setTilePositions]);
 

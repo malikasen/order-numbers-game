@@ -2,7 +2,7 @@ import * as React from 'react';
 import EmptySquare from './components/EmptySquare';
 import Numbers from './components/Numbers';
 
-const recordOrders = (shuffledTiles, setTilePositions) => {
+const recordPositions = (shuffledTiles, setTilePositions) => {
   if (shuffledTiles.length < 1) {
     return null;
   }
@@ -46,10 +46,15 @@ const canMoveTile = (tilePosition, emptyTilePosition) => {
     { 12: [13, 8] },
     { 13: [12, 14, 9] },
     { 14: [13, 15, 10] },
-    { 15: [14, 11] }
+    { 15: [14, 11] },
   ];
   let allowedPositions = allowedMoveCoordinates[tilePosition];
-  if (allowedPositions[Object.keys(allowedPositions)[0]].includes(emptyTilePosition)) {
+  console.log("number pos", tilePosition, "empty pos", emptyTilePosition, "allowed", allowedPositions);
+  if (
+    allowedPositions[Object.keys(allowedPositions)[0]].includes(
+      emptyTilePosition,
+    )
+  ) {
     return true;
   }
   return false;
@@ -60,23 +65,29 @@ const switchPositions = (
   oldPosition,
   newPosition,
   setIsTilesShuffled,
-  setShuffledTiles
+  setShuffledTiles,
 ) => {
   let shuffledTilesAfterSwitch = [];
-  let tilePositionsInProgress = [];
   for (let i = 0; i < 16; i++) {
     if (i === newPosition) {
-      tilePositionsInProgress.push({ id: number, order: i });
-      shuffledTilesAfterSwitch.push(<Numbers number={number} tilePositions={tilePositionsInProgress}/>);
+      shuffledTilesAfterSwitch.push(
+        <Numbers number={number} tilePosition={i} />,
+      );
     } else if (i === oldPosition) {
-      tilePositionsInProgress.push({ id: 'empty', order: i });
-      shuffledTilesAfterSwitch.push(<EmptySquare tilePositions={tilePositionsInProgress} setIsTilesShuffled={setIsTilesShuffled} setShuffledTiles={setShuffledTiles}/>);
+      shuffledTilesAfterSwitch.push(
+        <EmptySquare
+          tilePosition={i}
+          setIsTilesShuffled={setIsTilesShuffled}
+          setShuffledTiles={setShuffledTiles}
+        />,
+      );
     } else {
-      tilePositionsInProgress.push({ id: i+1, order: i });
-      shuffledTilesAfterSwitch.push(<Numbers number={i+1} tilePositions={tilePositionsInProgress}/>);
+      shuffledTilesAfterSwitch.push(
+        <Numbers number={i + 1} tilePosition={i} />,
+      );
     }
   }
   return shuffledTilesAfterSwitch;
 };
 
-export { recordOrders, switchPositions, canMoveTile };
+export { recordPositions, switchPositions, canMoveTile };

@@ -3,25 +3,27 @@ import { useDrop } from 'react-dnd';
 import { ItemTypes } from './ItemTypes';
 import { switchPositions, canMoveTile } from '../utils';
 
-export default function EmptySquare({ tilePositions, setShuffledTiles, setIsTilesShuffled }) {
-  const emptyTilePosition = tilePositions.find(
-    (tilePosition) => tilePosition.id === 'empty',
-  )?.order;
+export default function EmptySquare({
+  tilePosition,
+  setShuffledTiles,
+  setIsTilesShuffled,
+}) {
   const [{ isOver, canDrop }, drop] = useDrop(() => ({
     accept: ItemTypes.NUMBER,
     drop: (item) => {
       const newShuffledTiles = switchPositions(
         item.number,
-        item.position,
-        emptyTilePosition,
+        item.tilePosition,
+        tilePosition,
         setIsTilesShuffled,
-        setShuffledTiles
+        setShuffledTiles,
       );
       setIsTilesShuffled(true);
       setShuffledTiles(newShuffledTiles);
     },
     canDrop: (item) => {
-      const canMove = canMoveTile(item.position, emptyTilePosition);
+      console.log("item", item);
+      const canMove = canMoveTile(item.tilePosition, tilePosition);
       console.log("can move", canMove);
       return canMove;
     },
