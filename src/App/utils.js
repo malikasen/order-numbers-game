@@ -74,4 +74,4 @@ const switchPositions = (
   return shuffledTilesAfterSwitch;
 };
 
-export { recordPositions, switchPositions, canMoveTile };
+export { switchPositions, canMoveTile };

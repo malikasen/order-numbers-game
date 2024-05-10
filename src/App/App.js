@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import './styles.scss';
 import Numbers from './components/Numbers';
 import EmptySquare from './components/EmptySquare';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { recordPositions } from './utils';
 
 function App() {
   const [tiles, setTiles] = useState([]);

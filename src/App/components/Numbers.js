@@ -12,12 +12,11 @@ export default function Numbers({ number, tilePosition }) {
   }));
 
   return (
-    <div className="draggable" id={number} key={number} ref={drag}>
+    <div className="draggable" id={number} key={number} ref={drag} style={{
+      backgroundColor: isDragging ? 'rgb(236, 214, 189)' : 'rgb(168, 118, 65)',
+    }}>
       <p
         className="tile-number"
-        style={{
-          fontSize: isDragging ? 40 : 30,
-        }}
       >
         {number}
       </p>

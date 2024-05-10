@@ -8,7 +8,7 @@ export default function EmptySquare({
   setShuffledTiles,
   setIsTilesShuffled,
 }) {
-  const [{ isOver, canDrop }, drop] = useDrop(() => ({
+  const [{ isOver }, drop] = useDrop(() => ({
     accept: ItemTypes.NUMBER,
     drop: (item) => {
       const newShuffledTiles = switchPositions(
@@ -22,9 +22,7 @@ export default function EmptySquare({
       setShuffledTiles(newShuffledTiles);
     },
     canDrop: (item) => {
-      console.log("item", item);
       const canMove = canMoveTile(item.tilePosition, tilePosition);
-      console.log("can move", canMove);
       return canMove;
     },
     collect: (monitor) => ({
@@ -39,7 +37,7 @@ export default function EmptySquare({
       id="empty"
       key="empty"
       ref={drop}
-      style={{ backgroundColor: isOver ? 'red' : 'transparent' }}
+      style={{ backgroundColor: isOver ? 'rgb(168, 118, 65)' : 'transparent' }}
     />
   );
 }
