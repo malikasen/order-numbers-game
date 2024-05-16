@@ -1,73 +1,87 @@
 import * as React from 'react';
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 
 import './styles.scss';
+import Numbers from './components/Numbers';
+import EmptySquare from './components/EmptySquare';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 function App() {
   const [tiles, setTiles] = useState([]);
-  const [shuffledTiles, setShuffledTiles] = useState([]);
-  const [isTilesShuffled, setIsTilesShuffled] = useState(false);
-  const orderTiles = useCallback(
-    (async) => {
-      const order = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-      let tilesInProgress = [...tiles];
-      if (tiles.length === 0) {
-        for (let i = 0; i < order.length; i++) {
-          tilesInProgress.push(
-            <div className="drag-item" draggable="true" key={i}>
-              <p className="tile-number">{order[i]}</p>
-            </div>,
-          );
-        }
-        tilesInProgress.push(
-          <div className="drag-item" draggable="true" id="empty" key="empty" />,
-        );
-        setTiles(tilesInProgress);
-      } else {
-        setIsTilesShuffled(false);
-      }
-    },
-    [tiles],
-  );
+  const [positions, setPositions] = useState([]);
+  const orderTiles = () => {
+    const initialPositions = Array.from({ length: 15 }, (_, index) => ({
+      number: index + 1,
+      position: index,
+    }));
+    initialPositions.push({ number: 'empty', position: 15 });
 
-  const shuffleTiles = useCallback(() => {
-    let currentIndex = tiles.length,
-      randomIndex;
-    let tilesInProgress = [...tiles];
-    // While there remain elements to shuffle.
-    while (currentIndex > 0) {
-      // Pick a remaining element.
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-
-      // And swap it with the current element.
-      [tilesInProgress[currentIndex], tilesInProgress[randomIndex]] = [
-        tilesInProgress[randomIndex],
-        tilesInProgress[currentIndex],
-      ];
+    let tilesInProgress = [];
+    for (let i = 0; i < 15; i++) {
+      tilesInProgress.push(
+        <Numbers number={initialPositions[i].number} tilePosition={i} />,
+      );
     }
-    setShuffledTiles(tilesInProgress);
-    setIsTilesShuffled(true);
-  }, [tiles]);
+    tilesInProgress.push(
+      <EmptySquare
+        number="empty"
+        tilePosition={initialPositions.length - 1}
+        tiles={tilesInProgress}
+        setTiles={setTiles}
+        positions={initialPositions}
+        setPositions={setPositions}
+      />,
+    );
+    console.log('order', initialPositions);
+    setTiles(tilesInProgress);
+    setPositions(initialPositions);
+  };
+
+  const shuffleTiles = () => {
+    let positionsInProgress = [];
+    const numbersArray = Array.from({ length: 15 }, (_, index) => index + 1);
+    for (let i = numbersArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [numbersArray[i], numbersArray[j]] = [numbersArray[j], numbersArray[i]];
+    }
+
+    let tilesInProgress = [];
+    for (let i = 0; i < numbersArray.length; i++) {
+      positionsInProgress.push({ number: numbersArray[i], position: i });
+      tilesInProgress.push(
+        <Numbers number={numbersArray[i]} tilePosition={i} />,
+      );
+    }
+    positionsInProgress.push({
+      number: 'empty',
+      position: numbersArray.length,
+    });
+    tilesInProgress.push(
+      <EmptySquare
+        number="empty"
+        tilePosition={numbersArray.length}
+        tiles={tilesInProgress}
+        setTiles={setTiles}
+        positions={positionsInProgress}
+        setPositions={setPositions}
+      />,
+    );
+    console.log('shuffle', positionsInProgress);
+    setTiles(tilesInProgress);
+    setPositions(positionsInProgress);
+  };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <div className="left-half">
-          <button className="shuffle-button" onClick={orderTiles}>
-            <p>order numbers</p>
-          </button>
-          <button className="shuffle-button" onClick={shuffleTiles}>
-            <p>shuffle</p>
-          </button>
-          {tiles.length === 0 && !isTilesShuffled ? null : (
-            <div className="drag-list">
-              {isTilesShuffled ? shuffledTiles : tiles}
-            </div>
-          )}
-        </div>
-      </header>
-    </div>
+    <DndProvider backend={HTML5Backend}>
+      <button className="shuffle-button" onClick={orderTiles}>
+        <p>order numbers</p>
+      </button>
+      <button className="shuffle-button" onClick={shuffleTiles}>
+        <p>shuffle</p>
+      </button>
+      <div className="drag-list">{tiles}</div>
+    </DndProvider>
   );
 }
 
