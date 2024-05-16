@@ -1,42 +1,49 @@
-import * as React from 'react';
+import React, { useCallback } from 'react';
 import { useDrop } from 'react-dnd';
 import { ItemTypes } from './ItemTypes';
 import { switchPositions, canMoveTile } from '../utils';
 
 export default function EmptySquare({
   tilePosition,
-  setShuffledTiles,
-  setIsTilesShuffled,
+  tiles,
+  setTiles,
+  positions,
+  setPositions,
 }) {
-  const [{ isOver }, drop] = useDrop(() => ({
-    accept: ItemTypes.NUMBER,
-    drop: (item) => {
-      const newShuffledTiles = switchPositions(
-        item.number,
-        item.tilePosition,
-        tilePosition,
-        setIsTilesShuffled,
-        setShuffledTiles,
-      );
-      setIsTilesShuffled(true);
-      setShuffledTiles(newShuffledTiles);
-    },
-    canDrop: (item) => {
-      const canMove = canMoveTile(item.tilePosition, tilePosition);
-      return canMove;
-    },
-    collect: (monitor) => ({
-      isOver: !!monitor.isOver(),
-      canDrop: !!monitor.canDrop(),
-    }),
-  }));
+  const drop = useCallback(() => {
+    return {
+      accept: ItemTypes.NUMBER,
+      drop: (item) => {
+        switchPositions(
+          tiles[item.tilePosition].props.number,
+          item.tilePosition,
+          tilePosition,
+          tiles,
+          setTiles,
+          positions,
+          setPositions,
+        );
+      },
+      canDrop: (item) => {
+        const canMove = canMoveTile(item.tilePosition, tilePosition);
+        console.log('canMove', canMove);
+        return canMove;
+      },
+      collect: (monitor) => ({
+        isOver: !!monitor.isOver(),
+        canDrop: !!monitor.canDrop(),
+      }),
+    };
+  }, [tilePosition, tiles, positions, setTiles, setPositions]);
+
+  const [{ isOver }, dropRef] = useDrop(drop());
 
   return (
     <div
       className="droppable"
       id="empty"
       key="empty"
-      ref={drop}
+      ref={dropRef}
       style={{ backgroundColor: isOver ? 'rgb(168, 118, 65)' : 'transparent' }}
     />
   );

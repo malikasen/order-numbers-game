@@ -34,6 +34,8 @@ const canMoveTile = (tilePosition, emptyTilePosition) => {
     { 15: [14, 11] },
   ];
   let allowedPositions = allowedMoveCoordinates[tilePosition];
+  console.log('pos', tilePosition, emptyTilePosition);
+  console.log('allow', allowedPositions);
   if (
     allowedPositions[Object.keys(allowedPositions)[0]].includes(
       emptyTilePosition,
@@ -48,30 +50,44 @@ const switchPositions = (
   number,
   oldPosition,
   newPosition,
-  setIsTilesShuffled,
-  setShuffledTiles,
+  tiles,
+  setTiles,
+  positions,
+  setPositions,
 ) => {
-  let shuffledTilesAfterSwitch = [];
+  let tilesAfterSwitch = [];
+  let positionsInProgress = [...positions];
   for (let i = 0; i < 16; i++) {
     if (i === newPosition) {
-      shuffledTilesAfterSwitch.push(
-        <Numbers number={number} tilePosition={i} />,
-      );
+      tilesAfterSwitch.push(<Numbers number={number} tilePosition={i} />);
     } else if (i === oldPosition) {
-      shuffledTilesAfterSwitch.push(
+      //switching tiles when numbers are shuffled
+      positionsInProgress[newPosition] = {
+        number: number,
+        position: newPosition,
+      };
+      positionsInProgress[oldPosition] = {
+        number: 'empty',
+        position: oldPosition,
+      };
+      tilesAfterSwitch.push(
         <EmptySquare
+          number="empty"
           tilePosition={i}
-          setIsTilesShuffled={setIsTilesShuffled}
-          setShuffledTiles={setShuffledTiles}
+          tiles={tilesAfterSwitch}
+          setTiles={setTiles}
+          positions={positionsInProgress}
+          setPositions={setPositions}
         />,
       );
     } else {
-      shuffledTilesAfterSwitch.push(
-        <Numbers number={i + 1} tilePosition={i} />,
+      tilesAfterSwitch.push(
+        <Numbers number={tiles[i].props.number} tilePosition={i} />,
       );
     }
   }
-  return shuffledTilesAfterSwitch;
+  setTiles(tilesAfterSwitch);
+  setPositions(positionsInProgress);
 };
 
 export { switchPositions, canMoveTile };

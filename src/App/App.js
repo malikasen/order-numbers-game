@@ -9,54 +9,67 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 
 function App() {
   const [tiles, setTiles] = useState([]);
-  const [shuffledTiles, setShuffledTiles] = useState([]);
-  const [isTilesShuffled, setIsTilesShuffled] = useState(false);
+  const [positions, setPositions] = useState([]);
   const orderTiles = () => {
-    let tilesInProgress = [...tiles];
-    if (tiles.length === 0) {
-      for (let i = 0; i < 15; i++) {
-        tilesInProgress.push(<Numbers number={i + 1} tilePosition={i} />);
-      }
+    const initialPositions = Array.from({ length: 15 }, (_, index) => ({
+      number: index + 1,
+      position: index,
+    }));
+    initialPositions.push({ number: 'empty', position: 15 });
+
+    let tilesInProgress = [];
+    for (let i = 0; i < 15; i++) {
       tilesInProgress.push(
-        <EmptySquare
-          tilePosition={15}
-          setIsTilesShuffled={setIsTilesShuffled}
-          setShuffledTiles={setShuffledTiles}
-        />,
+        <Numbers number={initialPositions[i].number} tilePosition={i} />,
       );
-      setTiles(tilesInProgress);
-    } else {
-      setIsTilesShuffled(false);
     }
+    tilesInProgress.push(
+      <EmptySquare
+        number="empty"
+        tilePosition={initialPositions.length - 1}
+        tiles={tilesInProgress}
+        setTiles={setTiles}
+        positions={initialPositions}
+        setPositions={setPositions}
+      />,
+    );
+    console.log('order', initialPositions);
+    setTiles(tilesInProgress);
+    setPositions(initialPositions);
   };
 
   const shuffleTiles = () => {
-    let currentIndex = tiles.length,
-      randomIndex;
-    let tilesInProgress = [...tiles];
-    // While there are remaining elements to shuffle.
-    while (currentIndex > 0) {
-      // Pick a remaining element.
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-
-      // update positions
-      let newCurrent = React.cloneElement(tilesInProgress[randomIndex], {
-        tilePosition: currentIndex,
-      });
-      let newRandom = React.cloneElement(tilesInProgress[currentIndex], {
-        tilePosition: randomIndex,
-      });
-
-      // And swap it with the current element.
-      [tilesInProgress[currentIndex], tilesInProgress[randomIndex]] = [
-        newCurrent,
-        newRandom,
-      ];
+    let positionsInProgress = [];
+    const numbersArray = Array.from({ length: 15 }, (_, index) => index + 1);
+    for (let i = numbersArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [numbersArray[i], numbersArray[j]] = [numbersArray[j], numbersArray[i]];
     }
-    console.log('tiles in progress', tilesInProgress);
-    setShuffledTiles(tilesInProgress);
-    setIsTilesShuffled(true);
+
+    let tilesInProgress = [];
+    for (let i = 0; i < numbersArray.length; i++) {
+      positionsInProgress.push({ number: numbersArray[i], position: i });
+      tilesInProgress.push(
+        <Numbers number={numbersArray[i]} tilePosition={i} />,
+      );
+    }
+    positionsInProgress.push({
+      number: 'empty',
+      position: numbersArray.length,
+    });
+    tilesInProgress.push(
+      <EmptySquare
+        number="empty"
+        tilePosition={numbersArray.length}
+        tiles={tilesInProgress}
+        setTiles={setTiles}
+        positions={positionsInProgress}
+        setPositions={setPositions}
+      />,
+    );
+    console.log('shuffle', positionsInProgress);
+    setTiles(tilesInProgress);
+    setPositions(positionsInProgress);
   };
 
   return (
@@ -67,11 +80,7 @@ function App() {
       <button className="shuffle-button" onClick={shuffleTiles}>
         <p>shuffle</p>
       </button>
-      {tiles.length === 0 && !isTilesShuffled ? null : (
-        <div className="drag-list">
-          {isTilesShuffled ? shuffledTiles : tiles}
-        </div>
-      )}
+      <div className="drag-list">{tiles}</div>
     </DndProvider>
   );
 }
